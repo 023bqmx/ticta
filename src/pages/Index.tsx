@@ -30,7 +30,7 @@ const Index = () => {
         <nav className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Database className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-primary">SecureData</span>
+            <span className="text-2xl font-bold text-primary">MY DATA</span>
           </div>
           <Button variant="outline" onClick={handleGetStarted}>
             เข้าสู่ระบบ

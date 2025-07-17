@@ -144,7 +144,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ isOpen, onClose, phoneNumber }) => 
                 // Navigate back to login
               }}
             >
-              เปลี่ยนเบอร์โทรศัพท์
+              ส่งรหัสผ่านอีกครั้ง
             </button>
           </div>
         </div>
