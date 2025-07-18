@@ -156,7 +156,7 @@ const History = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => navigate(`/${record.type}`)}
+                              onClick={() => navigate(`/${record.type}?id=${record.id}`)}
                             >
                               ดูข้อมูล
                             </Button>

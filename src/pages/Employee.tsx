@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,13 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Building, Save } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
-import { saveRecord } from "@/lib/recordUtils";
+import { saveRecord, getRecordById, updateRecord } from "@/lib/recordUtils";
 
 const Employee = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const recordId = searchParams.get('id');
+  const [isViewMode, setIsViewMode] = useState(false);
   
   const [formData, setFormData] = useState({
     // ข้อมูลส่วนบุคคล
@@ -49,6 +52,17 @@ const Employee = () => {
     salaryInfo: ''
   });
 
+  useEffect(() => {
+    // Load saved data if viewing existing record
+    if (recordId) {
+      const savedRecord = getRecordById(recordId);
+      if (savedRecord) {
+        setFormData(savedRecord.data);
+        setIsViewMode(true);
+      }
+    }
+  }, [recordId]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -69,21 +83,30 @@ const Employee = () => {
       return;
     }
 
-    // บันทึกข้อมูลลงประวัติ
-    const currentDate = new Date();
-    saveRecord({
-      type: 'employee',
-      typeName: 'พนักงาน',
-      fullName: formData.fullName,
-      savedDate: currentDate.toISOString().split('T')[0],
-      savedTime: currentDate.toTimeString().split(' ')[0].substring(0, 5),
-      data: formData
-    });
+    if (isViewMode && recordId) {
+      // อัปเดตข้อมูลเดิม
+      updateRecord(recordId, formData);
+      toast({
+        title: "อัปเดตข้อมูลสำเร็จ",
+        description: "ข้อมูลพนักงานถูกอัปเดตเรียบร้อยแล้ว",
+      });
+    } else {
+      // บันทึกข้อมูลใหม่
+      const currentDate = new Date();
+      saveRecord({
+        type: 'employee',
+        typeName: 'พนักงาน',
+        fullName: formData.fullName,
+        savedDate: currentDate.toISOString().split('T')[0],
+        savedTime: currentDate.toTimeString().split(' ')[0].substring(0, 5),
+        data: formData
+      });
 
-    toast({
-      title: "บันทึกข้อมูลสำเร็จ",
-      description: "ข้อมูลพนักงานถูกบันทึกเรียบร้อยแล้ว",
-    });
+      toast({
+        title: "บันทึกข้อมูลสำเร็จ",
+        description: "ข้อมูลพนักงานถูกบันทึกเรียบร้อยแล้ว",
+      });
+    }
     
     navigate('/dashboard');
   };
@@ -94,14 +117,26 @@ const Employee = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Building className="h-8 w-8 text-green-600" />
-              <span className="text-2xl font-bold text-primary">ข้อมูลพนักงาน</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Building className="h-8 w-8 text-green-600" />
+                <span className="text-2xl font-bold text-primary">
+                  {isViewMode ? 'ดูข้อมูลพนักงาน' : 'ข้อมูลพนักงาน'}
+                </span>
+              </div>
+              <div className="flex space-x-2">
+                {isViewMode && (
+                  <Button variant="outline" onClick={() => navigate('/history')}>
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    กลับไปประวัติ
+                  </Button>
+                )}
+                <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
+                  <Save className="h-4 w-4 mr-2" />
+                  {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+                </Button>
+              </div>
             </div>
-            <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
-              <Save className="h-4 w-4 mr-2" />
-              บันทึกข้อมูล
-            </Button>
           </div>
         </div>
       </header>
