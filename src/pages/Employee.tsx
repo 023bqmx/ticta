@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Building, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
+import { saveRecord } from "@/lib/recordUtils";
 
 const Employee = () => {
   const navigate = useNavigate();
@@ -67,6 +68,17 @@ const Employee = () => {
       });
       return;
     }
+
+    // บันทึกข้อมูลลงประวัติ
+    const currentDate = new Date();
+    saveRecord({
+      type: 'employee',
+      typeName: 'พนักงาน',
+      fullName: formData.fullName,
+      savedDate: currentDate.toISOString().split('T')[0],
+      savedTime: currentDate.toTimeString().split(' ')[0].substring(0, 5),
+      data: formData
+    });
 
     toast({
       title: "บันทึกข้อมูลสำเร็จ",

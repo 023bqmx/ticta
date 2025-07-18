@@ -1,49 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Clock, FileText, GraduationCap, Building, User } from 'lucide-react';
+import { ArrowLeft, Clock, FileText, GraduationCap, Building, User, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getSavedRecords, deleteRecord, type SavedRecord } from "@/lib/recordUtils";
+import { useToast } from "@/hooks/use-toast";
 
 const History = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [savedRecords, setSavedRecords] = useState<SavedRecord[]>([]);
 
-  // Mock data for saved records
-  const savedRecords = [
-    {
-      id: 1,
-      type: 'student',
-      typeName: 'นักเรียน',
-      fullName: 'นาย สมชาย ใจดี',
-      savedDate: '2024-01-15',
-      savedTime: '14:30',
-      icon: GraduationCap,
-      color: 'bg-blue-100 text-blue-800',
-      borderColor: 'border-blue-200'
-    },
-    {
-      id: 2,
-      type: 'employee',
-      typeName: 'พนักงาน',
-      fullName: 'นางสาว สุดา พิมพา',
-      savedDate: '2024-01-10',
-      savedTime: '10:15',
-      icon: Building,
-      color: 'bg-green-100 text-green-800',
-      borderColor: 'border-green-200'
-    },
-    {
-      id: 3,
-      type: 'general',
-      typeName: 'บุคคลทั่วไป',
-      fullName: 'นาย วิชัย รักดี',
-      savedDate: '2024-01-08',
-      savedTime: '16:45',
-      icon: User,
-      color: 'bg-purple-100 text-purple-800',
-      borderColor: 'border-purple-200'
-    }
-  ];
+  useEffect(() => {
+    // Load saved records from localStorage
+    const records = getSavedRecords();
+    setSavedRecords(records);
+  }, []);
+
+  const handleDeleteRecord = (id: string) => {
+    deleteRecord(id);
+    setSavedRecords(getSavedRecords());
+    toast({
+      title: "ลบข้อมูลสำเร็จ",
+      description: "ข้อมูลถูกลบออกจากประวัติแล้ว",
+    });
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -55,6 +37,19 @@ const History = () => {
         return User;
       default:
         return FileText;
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'student':
+        return { color: 'bg-blue-100 text-blue-800', borderColor: 'border-blue-200' };
+      case 'employee':
+        return { color: 'bg-green-100 text-green-800', borderColor: 'border-green-200' };
+      case 'general':
+        return { color: 'bg-purple-100 text-purple-800', borderColor: 'border-purple-200' };
+      default:
+        return { color: 'bg-gray-100 text-gray-800', borderColor: 'border-gray-200' };
     }
   };
 
@@ -124,13 +119,14 @@ const History = () => {
 
               <div className="grid gap-6">
                 {savedRecords.map((record) => {
-                  const IconComponent = record.icon;
+                  const IconComponent = getTypeIcon(record.type);
+                  const colors = getTypeColor(record.type);
                   return (
-                    <Card key={record.id} className={`bg-gradient-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${record.borderColor} border-l-4`}>
+                    <Card key={record.id} className={`bg-gradient-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${colors.borderColor} border-l-4`}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className={`p-2 rounded-full ${record.color}`}>
+                            <div className={`p-2 rounded-full ${colors.color}`}>
                               <IconComponent className="h-5 w-5" />
                             </div>
                             <div>
@@ -142,7 +138,7 @@ const History = () => {
                               </CardDescription>
                             </div>
                           </div>
-                          <Badge variant="secondary" className={record.color}>
+                          <Badge variant="secondary" className={colors.color}>
                             {record.typeName}
                           </Badge>
                         </div>
@@ -167,9 +163,10 @@ const History = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => navigate(`/${record.type}`)}
+                              onClick={() => handleDeleteRecord(record.id)}
                             >
-                              แก้ไข
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              ลบ
                             </Button>
                           </div>
                         </div>

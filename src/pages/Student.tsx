@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, GraduationCap, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
+import { saveRecord } from "@/lib/recordUtils";
 
 const Student = () => {
   const navigate = useNavigate();
@@ -75,6 +76,17 @@ const Student = () => {
       });
       return;
     }
+
+    // บันทึกข้อมูลลงประวัติ
+    const currentDate = new Date();
+    saveRecord({
+      type: 'student',
+      typeName: 'นักเรียน',
+      fullName: formData.fullName,
+      savedDate: currentDate.toISOString().split('T')[0],
+      savedTime: currentDate.toTimeString().split(' ')[0].substring(0, 5),
+      data: formData
+    });
 
     toast({
       title: "บันทึกข้อมูลสำเร็จ",
