@@ -82,15 +82,9 @@ const General = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => navigate('/dashboard')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                กลับ
-              </Button>
-              <div className="flex items-center space-x-2">
-                <User className="h-8 w-8 text-purple-600" />
-                <span className="text-2xl font-bold text-primary">ข้อมูลบุคคลทั่วไป</span>
-              </div>
+            <div className="flex items-center space-x-2">
+              <User className="h-8 w-8 text-purple-600" />
+              <span className="text-2xl font-bold text-primary">ข้อมูลบุคคลทั่วไป</span>
             </div>
             <Button onClick={handleSubmit} className="bg-purple-600 hover:bg-purple-700">
               <Save className="h-4 w-4 mr-2" />

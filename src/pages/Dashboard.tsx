@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Building, User, FileText } from 'lucide-react';
+import { GraduationCap, Building, User, FileText, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -48,9 +48,15 @@ const Dashboard = () => {
               <FileText className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold text-primary">MY DATA</span>
             </div>
-            <Button variant="outline" onClick={() => navigate('/')}>
-              ออกจากระบบ
-            </Button>
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={() => navigate('/history')}>
+                <Clock className="h-4 w-4 mr-2" />
+                ประวัติการบันทึก
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/')}>
+                ออกจากระบบ
+              </Button>
+            </div>
           </div>
         </div>
       </header>

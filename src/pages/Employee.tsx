@@ -82,15 +82,9 @@ const Employee = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => navigate('/dashboard')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                กลับ
-              </Button>
-              <div className="flex items-center space-x-2">
-                <Building className="h-8 w-8 text-green-600" />
-                <span className="text-2xl font-bold text-primary">ข้อมูลพนักงาน</span>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Building className="h-8 w-8 text-green-600" />
+              <span className="text-2xl font-bold text-primary">ข้อมูลพนักงาน</span>
             </div>
             <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
               <Save className="h-4 w-4 mr-2" />
