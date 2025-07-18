@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Student from "./pages/Student";
 
 const queryClient = new QueryClient();
 

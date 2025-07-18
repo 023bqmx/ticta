@@ -19,9 +19,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onOTPRequest }
     onOTPRequest();
   };
 
-  const handleFacebookLogin = () => {
-    console.log('Facebook login clicked');
-    // TODO: Implement Facebook login
+  const handleSignUp = () => {
+    console.log('Sign up clicked');
+    // TODO: Implement Google account selector
     onOTPRequest();
   };
 
@@ -36,7 +36,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onOTPRequest }
         </DialogHeader>
         
         <div className="space-y-4">
-          {/* Social Login Buttons */}
+          {/* Google Login Button */}
           <Button 
             onClick={handleGoogleLogin}
             variant="outline" 
@@ -50,59 +50,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onOTPRequest }
             </svg>
             เข้าสู่ระบบด้วย Google
           </Button>
-          
-          <Button 
-            onClick={handleFacebookLogin}
-            variant="outline" 
-            className="w-full h-12 text-lg border-2 hover:bg-blue-50"
-          >
-            <svg className="w-5 h-5 mr-3 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-            เข้าสู่ระบบด้วย Facebook
-          </Button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                หรือ
-              </span>
-            </div>
-          </div>
-
-          {/* Email Login Form */}
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="email">อีเมล</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                className="mt-1"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="password">รหัสผ่าน</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="mt-1"
-              />
-            </div>
-            
-            <Button className="w-full" onClick={onOTPRequest}>
-              เข้าสู่ระบบ
-            </Button>
-          </div>
 
           <div className="text-center text-sm text-gray-600">
             ยังไม่มีบัญชี?{' '}
-            <button className="text-primary hover:underline">
+            <button 
+              onClick={handleSignUp}
+              className="text-primary hover:underline"
+            >
               สมัครสมาชิก
             </button>
           </div>

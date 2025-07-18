@@ -1,26 +1,22 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smartphone, Shield, Database, Users } from 'lucide-react';
+import { Shield, Database, Users } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import LoginModal from '@/components/LoginModal';
-import OTPModal from '@/components/OTPModal';
 
 const Index = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showOTPModal, setShowOTPModal] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
     setShowLoginModal(true);
   };
 
-  const handlePhoneSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (phoneNumber.trim()) {
-      setShowOTPModal(true);
-    }
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    navigate('/dashboard');
   };
 
   return (
@@ -65,33 +61,6 @@ const Index = () => {
               >
                 เข้าสู่ระบบ
               </Button>
-              
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    หรือยืนยันเบอร์โทร
-                  </span>
-                </div>
-              </div>
-
-              <form onSubmit={handlePhoneSubmit} className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Smartphone className="h-5 w-5 text-primary" />
-                  <Input
-                    type="tel"
-                    placeholder="เบอร์โทรศัพท์ (08X-XXX-XXXX)"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="flex-1"
-                  />
-                </div>
-                <Button type="submit" variant="outline" className="w-full">
-                  ส่งรหัส OTP
-                </Button>
-              </form>
             </CardContent>
           </Card>
         </div>
@@ -168,16 +137,7 @@ const Index = () => {
       <LoginModal 
         isOpen={showLoginModal} 
         onClose={() => setShowLoginModal(false)}
-        onOTPRequest={() => {
-          setShowLoginModal(false);
-          setShowOTPModal(true);
-        }}
-      />
-      
-      <OTPModal 
-        isOpen={showOTPModal} 
-        onClose={() => setShowOTPModal(false)}
-        phoneNumber={phoneNumber}
+        onOTPRequest={handleLoginSuccess}
       />
     </div>
   );
