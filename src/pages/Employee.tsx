@@ -117,25 +117,26 @@ const Employee = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Building className="h-8 w-8 text-green-600" />
-                <span className="text-2xl font-bold text-primary">
-                  {isViewMode ? 'ดูข้อมูลพนักงาน' : 'ข้อมูลพนักงาน'}
-                </span>
-              </div>
-              <div className="flex space-x-2">
-                {isViewMode && (
-                  <Button variant="outline" onClick={() => navigate('/history')}>
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    กลับไปประวัติ
-                  </Button>
-                )}
-                <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
-                  <Save className="h-4 w-4 mr-2" />
-                  {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+            <div className="flex items-center space-x-2">
+              <Building className="h-8 w-8 text-green-600" />
+              <span className="text-2xl font-bold text-primary">
+                {isViewMode ? 'ดูข้อมูลพนักงาน' : 'ข้อมูลพนักงาน'}
+              </span>
+            </div>
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={() => navigate('/dashboard')}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                กลับ
+              </Button>
+              {isViewMode && (
+                <Button variant="outline" onClick={() => navigate('/history')}>
+                  กลับไปประวัติ
                 </Button>
-              </div>
+              )}
+              <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
+                <Save className="h-4 w-4 mr-2" />
+                {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+              </Button>
             </div>
           </div>
         </div>

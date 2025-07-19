@@ -117,25 +117,26 @@ const General = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <User className="h-8 w-8 text-purple-600" />
-                <span className="text-2xl font-bold text-primary">
-                  {isViewMode ? 'ดูข้อมูลบุคคลทั่วไป' : 'ข้อมูลบุคคลทั่วไป'}
-                </span>
-              </div>
-              <div className="flex space-x-2">
-                {isViewMode && (
-                  <Button variant="outline" onClick={() => navigate('/history')}>
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    กลับไปประวัติ
-                  </Button>
-                )}
-                <Button onClick={handleSubmit} className="bg-purple-600 hover:bg-purple-700">
-                  <Save className="h-4 w-4 mr-2" />
-                  {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+            <div className="flex items-center space-x-2">
+              <User className="h-8 w-8 text-purple-600" />
+              <span className="text-2xl font-bold text-primary">
+                {isViewMode ? 'ดูข้อมูลบุคคลทั่วไป' : 'ข้อมูลบุคคลทั่วไป'}
+              </span>
+            </div>
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={() => navigate('/dashboard')}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                กลับ
+              </Button>
+              {isViewMode && (
+                <Button variant="outline" onClick={() => navigate('/history')}>
+                  กลับไปประวัติ
                 </Button>
-              </div>
+              )}
+              <Button onClick={handleSubmit} className="bg-purple-600 hover:bg-purple-700">
+                <Save className="h-4 w-4 mr-2" />
+                {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+              </Button>
             </div>
           </div>
         </div>
