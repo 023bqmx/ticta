@@ -1,21 +1,9 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 
 const app = express();
 
 app.use(bodyParser.json());
-
-/*
-const mockUserData = [{
-    username: "admin",
-    password: "admin"
-},
-{
-    username: "guest",
-    password: "guest"
-}]
-*/
-    
 
 //Login
 app.post("/login", (req, res) => {
@@ -29,7 +17,6 @@ app.post("/login", (req, res) => {
         res.json({
             success: true,
             message: "Login sucessful",
-            token: "encrypted token goes here",
         });
     } else {
         res.json({
