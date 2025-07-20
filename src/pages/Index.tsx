@@ -129,7 +129,7 @@ const Index = () => {
       <footer className="bg-white/50 backdrop-blur-sm border-t mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-gray-600">
-            <p>&copy; 2024 SecureData. สงวนลิขสิทธิ์ทุกประการ</p>
+            <p>&copy; 2025 My Data. สงวนลิขสิทธิ์ทุกประการ</p>
           </div>
         </div>
       </footer>
