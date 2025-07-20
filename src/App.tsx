@@ -13,6 +13,9 @@ import Student from "./pages/Student";
 import Employee from "./pages/Employee";
 import General from "./pages/General";
 import History from "./pages/History";
+import TemplateBuilder from "./pages/TemplateBuilder";
+import TemplateList from "./pages/TemplateList";
+import TemplateForm from "./pages/TemplateForm";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,12 @@ const App = () => (
           <Route path="/employee" element={<Employee />} />
           <Route path="/general" element={<General />} />
           <Route path="/history" element={<History />} />
+          <Route path="/template" element={<TemplateList />} />
+          <Route path="/template-list" element={<TemplateList />} />
+          <Route path="/template/create" element={<TemplateBuilder />} />
+          <Route path="/template/edit/:templateId" element={<TemplateBuilder />} />
+          <Route path="/template/form/:templateId" element={<TemplateForm />} />
+          <Route path="/template/form/:templateId/:recordId" element={<TemplateForm />} />
           <Route path="/search" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
