@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Save, ExternalLink } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
-import { saveRecord, getRecordById } from '@/lib/recordUtils';
+import { saveRecord } from '@/lib/recordUtils';
 
 interface TemplateField {
   id: string;
@@ -25,22 +25,19 @@ interface Template {
   createdAt: string;
 }
 
-const TemplateForm = () => {
+const SharedTemplate = () => {
+  const { templateId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { templateId, recordId } = useParams();
   const [template, setTemplate] = useState<Template | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>({});
-  const [isViewMode, setIsViewMode] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     if (templateId) {
       loadTemplate();
     }
-    if (recordId) {
-      loadRecord();
-    }
-  }, [templateId, recordId]);
+  }, [templateId]);
 
   const loadTemplate = () => {
     const templates = JSON.parse(localStorage.getItem('custom_templates') || '[]');
@@ -53,16 +50,6 @@ const TemplateForm = () => {
         initialData[field.id] = '';
       });
       setFormData(initialData);
-    }
-  };
-
-  const loadRecord = () => {
-    if (recordId) {
-      const record = getRecordById(recordId);
-      if (record && record.data) {
-        setFormData(record.data);
-        setIsViewMode(true);
-      }
     }
   };
 
@@ -156,33 +143,22 @@ const TemplateForm = () => {
     // Get the first field as name for display
     const firstFieldValue = formData[template.fields[0]?.id] || 'ไม่ระบุ';
 
-    if (isViewMode && recordId) {
-      // Update existing record
-      const { updateRecord } = require('@/lib/recordUtils');
-      updateRecord(recordId, formData);
-      toast({
-        title: "สำเร็จ",
-        description: "อัปเดตข้อมูลเรียบร้อยแล้ว"
-      });
-    } else {
-      // Save new record
-      saveRecord({
-        type: 'template' as any,
-        typeName: template.name,
-        fullName: firstFieldValue,
-        savedDate: new Date().toISOString().split('T')[0],
-        savedTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
-        data: formData,
-        templateId: template.id
-      });
+    // Save record
+    saveRecord({
+      type: 'template' as any,
+      typeName: template.name,
+      fullName: firstFieldValue,
+      savedDate: new Date().toISOString().split('T')[0],
+      savedTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
+      data: formData,
+      templateId: template.id
+    });
 
-      toast({
-        title: "สำเร็จ",
-        description: "บันทึกข้อมูลเรียบร้อยแล้ว"
-      });
-    }
-
-    navigate('/history');
+    setIsSubmitted(true);
+    toast({
+      title: "สำเร็จ",
+      description: "บันทึกข้อมูลเรียบร้อยแล้ว"
+    });
   };
 
   if (!template) {
@@ -190,8 +166,26 @@ const TemplateForm = () => {
       <div className="min-h-screen bg-gradient-main flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-semibold mb-4">ไม่พบเทมเพลต</h2>
-          <Button onClick={() => navigate('/template-list')}>กลับไปรายการเทมเพลต</Button>
+          <p className="text-gray-600 mb-4">เทมเพลตนี้อาจถูกลบหรือไม่มีอยู่</p>
         </div>
+      </div>
+    );
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-gradient-main flex items-center justify-center">
+        <Card className="bg-white/90 backdrop-blur-sm max-w-md w-full mx-4">
+          <CardHeader className="text-center">
+            <CardTitle className="text-green-600">บันทึกข้อมูลสำเร็จ!</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <p>ข้อมูลของคุณถูกบันทึกในเทมเพลต "{template.name}" เรียบร้อยแล้ว</p>
+            <p className="text-sm text-gray-600">
+              ขอบคุณที่กรอกข้อมูล เจ้าของเทมเพลตจะสามารถดูข้อมูลของคุณได้
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -203,17 +197,12 @@ const TemplateForm = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate(isViewMode ? '/history' : '/template-list')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                กลับ
-              </Button>
-              <h1 className="text-2xl font-bold text-primary">
-                {isViewMode ? 'ดูข้อมูล' : 'กรอกข้อมูล'}: {template.name}
-              </h1>
+              <ExternalLink className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-bold text-primary">กรอกข้อมูล: {template.name}</h1>
             </div>
             <Button onClick={handleSubmit}>
               <Save className="h-4 w-4 mr-2" />
-              {isViewMode ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
+              บันทึกข้อมูล
             </Button>
           </div>
         </div>
@@ -224,6 +213,7 @@ const TemplateForm = () => {
         <Card className="bg-white/90 backdrop-blur-sm">
           <CardHeader>
             <CardTitle>{template.name}</CardTitle>
+            <p className="text-gray-600">กรุณากรอกข้อมูลตามฟิลด์ด้านล่าง</p>
           </CardHeader>
           <CardContent className="space-y-6">
             {template.fields.map((field) => (
@@ -254,9 +244,10 @@ const TemplateForm = () => {
                     : `ใส่${field.label}`
                   }
                 />
-                {field.maxLength && (
+                {(field.type === 'idcard' || field.type === 'phone' || field.maxLength) && (
                   <div className="text-sm text-gray-500">
-                    {formData[field.id]?.length || 0}/{field.maxLength} ตัวอักษร
+                    {formData[field.id]?.length || 0}/
+                    {field.type === 'idcard' ? 13 : field.type === 'phone' ? 10 : field.maxLength} ตัวอักษร
                   </div>
                 )}
               </div>
@@ -268,4 +259,4 @@ const TemplateForm = () => {
   );
 };
 
-export default TemplateForm;
+export default SharedTemplate;

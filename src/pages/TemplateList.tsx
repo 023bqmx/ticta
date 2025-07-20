@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, Edit, Trash2, FileText, Users } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, FileText, Users, Share2, Copy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
 
 interface TemplateField {
   id: string;
   label: string;
-  type: 'text' | 'number' | 'email' | 'tel';
+  type: 'text' | 'number' | 'email' | 'tel' | 'name' | 'age' | 'idcard' | 'phone';
   required: boolean;
   maxLength?: number;
+  minLength?: number;
+  pattern?: string;
 }
 
 interface Template {
@@ -65,11 +67,33 @@ const TemplateList = () => {
   const getTypeName = (type: string) => {
     switch (type) {
       case 'text': return 'ข้อความ';
+      case 'name': return 'ชื่อ';
+      case 'age': return 'อายุ';
       case 'number': return 'ตัวเลข';
+      case 'idcard': return 'บัตรประชาชน';
+      case 'phone': return 'เบอร์โทร';
       case 'email': return 'อีเมล';
-      case 'tel': return 'เบอร์โทร';
+      case 'tel': return 'เบอร์โทรทั่วไป';
       default: return type;
     }
+  };
+
+  const generateShareLink = (templateId: string) => {
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/shared/template/${templateId}`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast({
+        title: "สำเร็จ",
+        description: "คัดลอกลิงค์แชร์เรียบร้อยแล้ว"
+      });
+    }).catch(() => {
+      toast({
+        title: "ข้อผิดพลาด", 
+        description: "ไม่สามารถคัดลอกลิงค์ได้",
+        variant: "destructive"
+      });
+    });
   };
 
   return (
@@ -125,6 +149,10 @@ const TemplateList = () => {
                       <Button variant="outline" onClick={() => navigate(`/template/form/${template.id}`)}>
                         <FileText className="h-4 w-4 mr-2" />
                         กรอกข้อมูล
+                      </Button>
+                      <Button variant="outline" onClick={() => generateShareLink(template.id)} title="แชร์เทมเพลตให้ผู้อื่นกรอกข้อมูล">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        แชร์
                       </Button>
                       <Button variant="outline" onClick={() => navigate(`/template/edit/${template.id}`)}>
                         <Edit className="h-4 w-4" />

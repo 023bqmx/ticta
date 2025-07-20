@@ -16,6 +16,7 @@ import History from "./pages/History";
 import TemplateBuilder from "./pages/TemplateBuilder";
 import TemplateList from "./pages/TemplateList";
 import TemplateForm from "./pages/TemplateForm";
+import SharedTemplate from "./pages/SharedTemplate";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/template/edit/:templateId" element={<TemplateBuilder />} />
           <Route path="/template/form/:templateId" element={<TemplateForm />} />
           <Route path="/template/form/:templateId/:recordId" element={<TemplateForm />} />
+          <Route path="/shared/template/:templateId" element={<SharedTemplate />} />
           <Route path="/search" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -11,9 +11,11 @@ import { useToast } from "@/hooks/use-toast";
 interface TemplateField {
   id: string;
   label: string;
-  type: 'text' | 'number' | 'email' | 'tel';
+  type: 'text' | 'number' | 'email' | 'tel' | 'name' | 'age' | 'idcard' | 'phone';
   required: boolean;
   maxLength?: number;
+  minLength?: number;
+  pattern?: string;
 }
 
 interface Template {
@@ -172,10 +174,14 @@ const TemplateBuilder = () => {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="text">ข้อความ</SelectItem>
-                              <SelectItem value="number">ตัวเลข</SelectItem>
+                              <SelectItem value="text">ข้อความทั่วไป</SelectItem>
+                              <SelectItem value="name">ชื่อ (ตัวอักษรไทย/อังกฤษเท่านั้น)</SelectItem>
+                              <SelectItem value="age">อายุ (ตัวเลข 1-120)</SelectItem>
+                              <SelectItem value="number">ตัวเลขทั่วไป</SelectItem>
+                              <SelectItem value="idcard">เลขบัตรประชาชน (13 หลัก)</SelectItem>
+                              <SelectItem value="phone">เบอร์โทรศัพท์ (10 หลัก)</SelectItem>
                               <SelectItem value="email">อีเมล</SelectItem>
-                              <SelectItem value="tel">เบอร์โทรศัพท์</SelectItem>
+                              <SelectItem value="tel">เบอร์โทรทั่วไป</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -190,6 +196,28 @@ const TemplateBuilder = () => {
                               placeholder="ไม่จำกัด"
                               min="1"
                             />
+                          </div>
+                        )}
+
+                        {/* Auto-set constraints for specific types */}
+                        {field.type === 'idcard' && (
+                          <div className="text-sm text-gray-600">
+                            จำกัด 13 หลัก (ตัวเลขเท่านั้น)
+                          </div>
+                        )}
+                        {field.type === 'phone' && (
+                          <div className="text-sm text-gray-600">
+                            จำกัด 10 หลัก (ตัวเลขเท่านั้น)
+                          </div>
+                        )}
+                        {field.type === 'age' && (
+                          <div className="text-sm text-gray-600">
+                            ตัวเลข 1-120 เท่านั้น
+                          </div>
+                        )}
+                        {field.type === 'name' && (
+                          <div className="text-sm text-gray-600">
+                            ตัวอักษรไทยและอังกฤษเท่านั้น
                           </div>
                         )}
 
