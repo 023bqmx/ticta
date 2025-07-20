@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Building, User, FileText, Clock } from 'lucide-react';
+import { GraduationCap, Building, User, FileText, Clock, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -31,6 +31,14 @@ const Dashboard = () => {
       icon: User,
       color: 'bg-purple-500 hover:bg-purple-600',
       route: '/general'
+    },
+    {
+      id: 'template',
+      title: 'สร้างเทมเพลตเอง',
+      description: 'สร้างฟอร์มข้อมูลตามต้องการ',
+      icon: PlusCircle,
+      color: 'bg-orange-500 hover:bg-orange-600',
+      route: '/template'
     }
   ];
 
@@ -72,7 +80,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {userTypes.map((type) => {
             const IconComponent = type.icon;
             return (

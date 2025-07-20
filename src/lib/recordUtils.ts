@@ -1,12 +1,13 @@
 // Utils for managing saved records in localStorage
 export interface SavedRecord {
   id: string;
-  type: 'student' | 'employee' | 'general';
+  type: 'student' | 'employee' | 'general' | 'template';
   typeName: string;
   fullName: string;
   savedDate: string;
   savedTime: string;
   data: any;
+  templateId?: string;
 }
 
 const STORAGE_KEY = 'saved_records';

@@ -35,6 +35,8 @@ const History = () => {
         return Building;
       case 'general':
         return User;
+      case 'template':
+        return FileText;
       default:
         return FileText;
     }
@@ -48,6 +50,8 @@ const History = () => {
         return { color: 'bg-green-100 text-green-800', borderColor: 'border-green-200' };
       case 'general':
         return { color: 'bg-purple-100 text-purple-800', borderColor: 'border-purple-200' };
+      case 'template':
+        return { color: 'bg-orange-100 text-orange-800', borderColor: 'border-orange-200' };
       default:
         return { color: 'bg-gray-100 text-gray-800', borderColor: 'border-gray-200' };
     }
@@ -156,7 +160,13 @@ const History = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => navigate(`/${record.type}?id=${record.id}`)}
+                              onClick={() => {
+                                if (record.type === 'template' && record.templateId) {
+                                  navigate(`/template/form/${record.templateId}/${record.id}`);
+                                } else {
+                                  navigate(`/${record.type}?id=${record.id}`);
+                                }
+                              }}
                             >
                               ดูข้อมูล
                             </Button>
@@ -184,7 +194,7 @@ const History = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="grid grid-cols-4 gap-4 text-center">
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">
                         {savedRecords.filter(r => r.type === 'student').length}
@@ -202,6 +212,12 @@ const History = () => {
                         {savedRecords.filter(r => r.type === 'general').length}
                       </div>
                       <div className="text-sm text-purple-800">บุคคลทั่วไป</div>
+                    </div>
+                    <div className="p-4 bg-orange-50 rounded-lg">
+                      <div className="text-2xl font-bold text-orange-600">
+                        {savedRecords.filter(r => r.type === 'template').length}
+                      </div>
+                      <div className="text-sm text-orange-800">เทมเพลต</div>
                     </div>
                   </div>
                 </CardContent>
