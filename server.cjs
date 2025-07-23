@@ -1,62 +1,91 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 dotenv.config();
-
-const uri = process.env.MONGODB_URI;
-
 const app = express();
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
 
 app.use(bodyParser.json());
+app.use(session({ secret: "secretkey", resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Register น่ะจะ
-app.post("/register", async (req, res) => {
-    const { username, password } = req.body;
-    const client = new MongoClient(uri, {useUnifiedTopology: true});
+// === Passport Google Strategy ===
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  async (accessToken, refreshToken, profile, done) => {
     try {
-        await client.connect();
-        const database = client.db("users");
-        const collection = database.collection("users");
-        const user = await collection.insertOne({ username: username, password: password });
-        res.json({
-            success: true,
-            message: "Register successful",
-        });
-    } catch (error) {
-        res.json({
-            success: false,
-            message: "Register failed",
-            });
-    } finally {
-        await client.close();
+      await client.connect();
+      const db = client.db("users");
+      const users = db.collection("users");
+
+      let user = await users.findOne({ googleId: profile.id });
+      if (!user) {
+        user = {
+          googleId: profile.id,
+          username: profile.displayName,
+          email: profile.emails?.[0]?.value || "",
+        };
+        await users.insertOne(user);
+      }
+      return done(null, user);
+    } catch (err) {
+      return done(err);
     }
+  }
+));
+
+passport.serializeUser((user, done) => {
+  done(null, user.googleId);
 });
 
-
-// Login น่ะจะ
-app.post("/login", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    const mockUsername = "admin";
-    const mockPassword = "admin";
-
-    if (username === mockUsername && password === mockPassword) {
-        res.json({
-            success: true,
-            message: "Login sucessful",
-        });
-    } else {
-        res.json({
-        success: false,
-        message: "Login failed",
-    });
-}
+passport.deserializeUser(async (id, done) => {
+  await client.connect();
+  const db = client.db("users");
+  const users = db.collection("users");
+  const user = await users.findOne({ googleId: id });
+  done(null, user);
 });
 
+// === Routes ===
 
-app.listen(8080, () => {
-  console.log("Server running on port http://localhost:8080");
+// หน้าแรก
+app.get("/", (req, res) => {
+  res.send(`<h1>Welcome! <a href="/auth/google">Login/Register with Google</a></h1>`);
+});
+
+// 🚪 เริ่ม Login/Register ด้วย Google
+app.get("/auth/google", passport.authenticate("google", {
+  scope: ["profile", "email"]
+}));
+
+// ✅ Callback กลับหลัง login/register
+app.get("/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login-failure" }),
+  (req, res) => {
+    res.redirect("/login-success");
+  }
+);
+
+// หน้า Login สำเร็จ
+app.get("/login-success", (req, res) => {
+  res.send(`<h1>Login Success</h1><p>Hello, ${req.user?.username || "User"}</p>`);
+});
+
+// หน้า Login ล้มเหลว
+app.get("/login-failure", (req, res) => {
+  res.send("<h1>Login Failed</h1>");
+});
+
+app.listen(8081, () => {
+  console.log("Server running on http://localhost:8081");
 });
