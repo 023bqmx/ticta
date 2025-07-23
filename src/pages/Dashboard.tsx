@@ -51,9 +51,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-main">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b">
+      <header className="bg-card/80 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -77,10 +77,10 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
             เลือกประเภทข้อมูลของคุณ
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-muted-foreground">
             เลือกประเภทที่เหมาะสมกับตัวคุณเพื่อกรอกข้อมูลที่เกี่ยวข้อง
           </p>
         </div>
@@ -89,7 +89,7 @@ const Dashboard = () => {
           {userTypes.map((type) => {
             const IconComponent = type.icon;
             return (
-              <Card key={type.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <Card key={type.id} className="bg-card border border-border shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                 <CardHeader className="text-center pb-6">
                   <div className={`w-16 h-16 ${type.color} rounded-full flex items-center justify-center mx-auto mb-4 text-white`}>
                     <IconComponent className="h-8 w-8" />
@@ -97,7 +97,7 @@ const Dashboard = () => {
                   <CardTitle className="text-xl font-semibold">
                     {type.title}
                   </CardTitle>
-                  <CardDescription className="text-gray-600">
+                  <CardDescription className="text-muted-foreground">
                     {type.description}
                   </CardDescription>
                 </CardHeader>
