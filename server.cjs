@@ -86,6 +86,31 @@ app.get("/login-failure", (req, res) => {
   res.send("<h1>Login Failed</h1>");
 });
 
+
+// === Email/Password Login ===
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    await client.connect();
+    const db = client.db("users");
+    const users = db.collection("users");
+    // ค้นหาผู้ใช้จากอีเมล
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "ไม่พบผู้ใช้งาน" });
+    }
+    // ตรวจสอบรหัสผ่าน (ตัวอย่าง: plaintext, ควรใช้ hash จริง)
+    if (user.password !== password) {
+      return res.status(401).json({ message: "รหัสผ่านไม่ถูกต้อง" });
+    }
+    // ส่ง token กลับ (ตัวอย่าง: ส่ง email เป็น token, ควรใช้ JWT จริง)
+    res.json({ token: user.email, username: user.username });
+  } catch (err) {
+    res.status(500).json({ message: "เกิดข้อผิดพลาด" });
+  }
+});
+
+
 app.listen(8081, () => {
   console.log("Server running on http://localhost:8081");
 });
