@@ -1,15 +1,17 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Building, User, FileText, Clock, PlusCircle, HelpCircle } from 'lucide-react';
+import { GraduationCap, Building, User, FileText, Clock, PlusCircle, HelpCircle, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { TutorialModal } from '@/components/TutorialModal';
+import { ContactModal } from '@/components/ContactModal';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   const userTypes = [
     {
@@ -115,8 +117,15 @@ const Dashboard = () => {
         </div>
       </main>
 
-      {/* Tutorial Button */}
-      <div className="fixed bottom-6 right-6">
+      {/* Fixed Action Buttons */}
+      <div className="fixed bottom-6 right-6 flex flex-col space-y-3">
+        <Button
+          onClick={() => setShowContact(true)}
+          className="rounded-full h-12 w-12 shadow-lg"
+          variant="secondary"
+        >
+          <MessageCircle className="h-5 w-5" />
+        </Button>
         <Button
           onClick={() => setShowTutorial(true)}
           className="rounded-full h-12 w-12 shadow-lg"
@@ -126,8 +135,9 @@ const Dashboard = () => {
         </Button>
       </div>
 
-      {/* Tutorial Modal */}
+      {/* Modals */}
       <TutorialModal open={showTutorial} onOpenChange={setShowTutorial} />
+      <ContactModal open={showContact} onOpenChange={setShowContact} />
     </div>
   );
 };
