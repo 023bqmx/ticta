@@ -1,11 +1,15 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Building, User, FileText, Clock, PlusCircle } from 'lucide-react';
+import { GraduationCap, Building, User, FileText, Clock, PlusCircle, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { TutorialModal } from '@/components/TutorialModal';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const userTypes = [
     {
@@ -56,7 +60,8 @@ const Dashboard = () => {
               <FileText className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold text-primary">MY DATA</span>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex items-center space-x-2">
+              <ThemeToggle />
               <Button variant="outline" onClick={() => navigate('/history')}>
                 <Clock className="h-4 w-4 mr-2" />
                 ประวัติการบันทึก
@@ -109,6 +114,20 @@ const Dashboard = () => {
           })}
         </div>
       </main>
+
+      {/* Tutorial Button */}
+      <div className="fixed bottom-6 right-6">
+        <Button
+          onClick={() => setShowTutorial(true)}
+          className="rounded-full h-12 w-12 shadow-lg"
+          variant="default"
+        >
+          <HelpCircle className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* Tutorial Modal */}
+      <TutorialModal open={showTutorial} onOpenChange={setShowTutorial} />
     </div>
   );
 };
