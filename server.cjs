@@ -65,6 +65,14 @@ app.get("/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
+app.get("/api/me", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+});
+
 // ✅ Callback กลับหลัง login/register
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login-failure" }),
@@ -108,6 +116,6 @@ app.post("/api/login", async (req, res) => {
 });
 
 
-app.listen(8080, () => {
-  console.log("Server running on http://localhost:8080");
+app.listen(8081, () => {
+  console.log("Server running on http://localhost:8081");
 });

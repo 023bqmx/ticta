@@ -18,6 +18,7 @@ import TemplateBuilder from "./pages/TemplateBuilder";
 import TemplateList from "./pages/TemplateList";
 import TemplateForm from "./pages/TemplateForm";
 import SharedTemplate from "./pages/SharedTemplate";
+import LoginSuccess from "@/pages/LoginSuccess";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,8 @@ const App = () => (
           <Route path="/template/form/:templateId/:recordId" element={<TemplateForm />} />
           <Route path="/shared/template/:templateId" element={<SharedTemplate />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings" element={<Settings />} />          
+          <Route path="/login-success" element={<LoginSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

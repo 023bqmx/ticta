@@ -5,18 +5,15 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  
   server: {
-  port: 8080,
-  proxy: {
-    '/auth': 'http://localhost:8081', // เพิ่มบรรทัดนี้
+    port: 8080, // frontend ใช้ 8080
+    proxy: {
+      '/auth': 'http://localhost:8081', // proxy ไป backend ที่ 8081
+    },
   },
-  },
-  
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
