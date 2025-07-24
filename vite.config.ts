@@ -5,10 +5,14 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  
   server: {
-    host: "::",
-    port: 8080,
+  port: 8080,
+  proxy: {
+    '/auth': 'http://localhost:8081', // เพิ่มบรรทัดนี้
   },
+  },
+  
   plugins: [
     react(),
     mode === 'development' &&

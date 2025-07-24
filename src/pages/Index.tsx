@@ -55,12 +55,14 @@ const Index = () => {
               <CardDescription>เลือกวิธีการเข้าสู่ระบบ</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button 
-                className="w-full h-12 text-lg"
-                onClick={handleGetStarted}
-              >
-                เข้าสู่ระบบ
-              </Button>
+              <a href="/auth/google">
+                <Button 
+                  className="w-full h-12 text-lg"
+                  onClick={handleGetStarted}
+                >
+                  เข้าสู่ระบบ
+                </Button>
+              </a>
             </CardContent>
           </Card>
         </div>

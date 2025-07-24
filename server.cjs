@@ -12,6 +12,13 @@ const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
 app.use(bodyParser.json());
+
+const cors = require("cors");
+app.use(cors({
+  origin: "http://localhost:8080", // ให้ตรงกับ frontend
+  credentials: true
+}));
+
 app.use(session({ secret: "secretkey", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -22,23 +29,13 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/auth/google/callback"
   },
+
   async (accessToken, refreshToken, profile, done) => {
     try {
-      await client.connect();
-      const db = client.db("users");
-      const users = db.collection("users");
-
-      let user = await users.findOne({ googleId: profile.id });
-      if (!user) {
-        user = {
-          googleId: profile.id,
-          username: profile.displayName,
-          email: profile.emails?.[0]?.value || "",
-        };
-        await users.insertOne(user);
-      }
-      return done(null, user);
+      console.log("Google profile:", profile); // เพิ่ม log นี้
+      // ...existing code...
     } catch (err) {
+      console.error("Google OAuth error:", err); // เพิ่ม log error
       return done(err);
     }
   }
@@ -72,7 +69,7 @@ app.get("/auth/google", passport.authenticate("google", {
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login-failure" }),
   (req, res) => {
-    res.redirect("/login-success");
+    res.redirect("http://localhost:8080/login-success");
   }
 );
 
@@ -111,6 +108,6 @@ app.post("/api/login", async (req, res) => {
 });
 
 
-app.listen(8081, () => {
-  console.log("Server running on http://localhost:8081");
+app.listen(8080, () => {
+  console.log("Server running on http://localhost:8080");
 });
