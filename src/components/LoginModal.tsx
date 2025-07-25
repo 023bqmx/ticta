@@ -58,7 +58,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onOTPRequest }
               onClick={handleSignUp}
               className="text-primary hover:underline"
             >
-              สมัครสมาชิก
+              ทดลองบัญชีฟรี
             </button>
           </div>
         </div>
